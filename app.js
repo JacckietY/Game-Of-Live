@@ -146,13 +146,13 @@ function randomButtonHandler() {
 
 // start/pause/continue the game
 function startButtonHandler() {
-    if (isPlaying) {
-        isPlaying = false;
-        this.innerHTML = "Continue";
+    isPlaying = !isPlaying;
+
+    if (!isPlaying) {
+        this.textContent = "Continue";
         clearTimeout(timer);
     } else {
-        isPlaying = true;
-        this.innerHTML = "Pause";
+        this.textContent = "Pause";
         play();
     }
 }
@@ -166,6 +166,7 @@ function play() {
     }
 }
 
+//check rules, reset, update view
 function computeNextGen() {
     for (let i = 0; i < ROWS; i++) {
         for (let j = 0; j < COLS; j++) {
@@ -184,22 +185,22 @@ function computeNextGen() {
 // Any live cell with two or three live neighbours lives on to the next generation.
 // Any live cell with more than three live neighbours dies, as if by overcrowding.
 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-
 function applyRules(row, col) {
-    let numNeighbors = countNeighbors(row, col);
-    if (grid[row][col] == 1) {
-        if (numNeighbors < 2) {
-            nextGrid[row][col] = 0;
-        } else if (numNeighbors == 2 || numNeighbors == 3) {
-            nextGrid[row][col] = 1;
-        } else if (numNeighbors > 3) {
-            nextGrid[row][col] = 0;
-        }
-    } else if (grid[row][col] == 0) {
-            if (numNeighbors == 3) {
-                nextGrid[row][col] = 1;
-            }
-        }
+    const numNeighbors = countNeighbors(row, col);
+
+    if (numNeighbors < 2 || numNeighbors > 3) {
+        nextGrid[row][col] = 0;
+        return;
+    }
+
+    if (numNeighbors == 3) {
+        nextGrid[row][col] = 1;
+        return;
+    }
+
+    if(grid[row][col] == 1 && numNeighbors == 2){
+        nextGrid[row][col] = 1;
+    }
 }
     
 function countNeighbors(row, col) {
