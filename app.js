@@ -42,8 +42,8 @@ function copyAndResetGrid() {
 
 // Initialize
 function initialize() {
-    createTable();
     initializeGrids();
+    createTable();
     resetGrids();
     setupControlButtons();
 }
