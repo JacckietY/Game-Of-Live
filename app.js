@@ -1,24 +1,22 @@
-var rows = 10;
-var cols = 10;
+const ROWS = 10;
+const COLS = 10;
+const REPRODUCTION_TIME = 100;
 
-var playing = false;
-
-var grid = new Array(rows);
-var nextGrid = new Array(rows);
-
-var timer;
-var reproductionTime = 100;
+let isPlaying = false;
+let grid = new Array(ROWS);
+let nextGrid = new Array(ROWS);
+let timer;
 
 function initializeGrids() {
-    for (var i = 0; i < rows; i++) {
-        grid[i] = new Array(cols);
-        nextGrid[i] = new Array(cols);
+    for (let i = 0; i < ROWS; i++) {
+        grid[i] = new Array(COLS);
+        nextGrid[i] = new Array(COLS);
     }
 }
 
 function resetGrids() {
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
             grid[i][j] = 0;
             nextGrid[i][j] = 0;
         }
@@ -26,8 +24,8 @@ function resetGrids() {
 }
 
 function copyAndResetGrid() {
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
             grid[i][j] = nextGrid[i][j];
             nextGrid[i][j] = 0;
         }
@@ -44,13 +42,13 @@ function initialize() {
 
 // Lay out the board
 function createTable() {
-    var gridContainer = document.getElementById('gridContainer');
-    var table = document.createElement("table");
+    let gridContainer = document.getElementById('gridContainer');
+    let table = document.createElement("table");
     
-    for (var i = 0; i < rows; i++) {
-        var tr = document.createElement("tr");
-        for (var j = 0; j < cols; j++) {//
-            var cell = document.createElement("td");
+    for (let i = 0; i < ROWS; i++) {
+        let tr = document.createElement("tr");
+        for (let j = 0; j < COLS; j++) {//
+            let cell = document.createElement("td");
             cell.setAttribute("id", i + "_" + j);
             cell.setAttribute("class", "dead");
             cell.onclick = cellClickHandler;
@@ -63,11 +61,11 @@ function createTable() {
 
 
     function cellClickHandler() {
-        var rowcol = this.id.split("_");
-        var row = rowcol[0];
-        var col = rowcol[1];
+        let rowcol = this.id.split("_");
+        let row = rowcol[0];
+        let col = rowcol[1];
         
-        var classes = this.getAttribute("class");
+        let classes = this.getAttribute("class");
         if(classes.indexOf("live") > -1) {
             this.setAttribute("class", "dead");
             grid[row][col] = 0;
@@ -78,9 +76,9 @@ function createTable() {
     }
 
     function updateView() {
-        for (var i = 0; i < rows; i++) {
-            for (var j = 0; j < cols; j++) {
-                var cell = document.getElementById(i + "_" + j);
+        for (let i = 0; i < ROWS; i++) {
+            for (let j = 0; j < COLS; j++) {
+                let cell = document.getElementById(i + "_" + j);
                 if (grid[i][j] == 0) {
                     cell.setAttribute("class", "dead");
                 } else {
@@ -92,48 +90,48 @@ function createTable() {
 
 function setupControlButtons() {
     // button to start
-    var startButton = document.getElementById('start');
+    let startButton = document.getElementById('start');
     startButton.onclick = startButtonHandler;
     
     // button to clear
-    var clearButton = document.getElementById('clear');
+    let clearButton = document.getElementById('clear');
     clearButton.onclick = clearButtonHandler;
 
     // button to set random initial state
-    var randomButton = document.getElementById("random");
+    let randomButton = document.getElementById("random");
     randomButton.onclick = randomButtonHandler;
 }
 
 // clear the grid
 function clearButtonHandler() {
     
-    playing = false;
-    var startButton = document.getElementById('start');
+    isPlaying = false;
+    let startButton = document.getElementById('start');
     startButton.innerHTML = "Start";    
     clearTimeout(timer);
     
-    var cellsList = document.getElementsByClassName("live");
+    let cellsList = document.getElementsByClassName("live");
     // convert to array first, otherwise, you're working on a live node list
     // and the update doesn't work!
-    var cells = [];
-    for (var i = 0; i < cellsList.length; i++) {
+    let cells = [];
+    for (let i = 0; i < cellsList.length; i++) {
         cells.push(cellsList[i]);
     }
     
-    for (var i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i++) {
         cells[i].setAttribute("class", "dead");
     }
     resetGrids;
 }
 
 function randomButtonHandler() {
-    if (playing) return;
+    if (isPlaying) return;
     clearButtonHandler();
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
-            var isLive = Math.round(Math.random());
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
+            let isLive = Math.round(Math.random());
             if (isLive == 1) {
-                var cell = document.getElementById(i + "_" + j);
+                let cell = document.getElementById(i + "_" + j);
                 cell.setAttribute("class", "live");
                 grid[i][j] = 1;
             }
@@ -143,12 +141,12 @@ function randomButtonHandler() {
 
 // start/pause/continue the game
 function startButtonHandler() {
-    if (playing) {
-        playing = false;
+    if (isPlaying) {
+        isPlaying = false;
         this.innerHTML = "Continue";
         clearTimeout(timer);
     } else {
-        playing = true;
+        isPlaying = true;
         this.innerHTML = "Pause";
         play();
     }
@@ -158,14 +156,14 @@ function startButtonHandler() {
 function play() {
     computeNextGen();
     
-    if (playing) {
-        timer = setTimeout(play, reproductionTime);
+    if (isPlaying) {
+        timer = setTimeout(play, REPRODUCTION_TIME);
     }
 }
 
 function computeNextGen() {
-    for (var i = 0; i < rows; i++) {
-        for (var j = 0; j < cols; j++) {
+    for (let i = 0; i < ROWS; i++) {
+        for (let j = 0; j < COLS; j++) {
             applyRules(i, j);
         }
     }
@@ -183,7 +181,7 @@ function computeNextGen() {
 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 function applyRules(row, col) {
-    var numNeighbors = countNeighbors(row, col);
+    let numNeighbors = countNeighbors(row, col);
     if (grid[row][col] == 1) {
         if (numNeighbors < 2) {
             nextGrid[row][col] = 0;
@@ -200,29 +198,29 @@ function applyRules(row, col) {
 }
     
 function countNeighbors(row, col) {
-    var count = 0;
+    let count = 0;
     if (row-1 >= 0) {
         if (grid[row-1][col] == 1) count++;
     }
     if (row-1 >= 0 && col-1 >= 0) {
         if (grid[row-1][col-1] == 1) count++;
     }
-    if (row-1 >= 0 && col+1 < cols) {
+    if (row-1 >= 0 && col+1 < COLS) {
         if (grid[row-1][col+1] == 1) count++;
     }
     if (col-1 >= 0) {
         if (grid[row][col-1] == 1) count++;
     }
-    if (col+1 < cols) {
+    if (col+1 < COLS) {
         if (grid[row][col+1] == 1) count++;
     }
-    if (row+1 < rows) {
+    if (row+1 < ROWS) {
         if (grid[row+1][col] == 1) count++;
     }
-    if (row+1 < rows && col-1 >= 0) {
+    if (row+1 < ROWS && col-1 >= 0) {
         if (grid[row+1][col-1] == 1) count++;
     }
-    if (row+1 < rows && col+1 < cols) {
+    if (row+1 < ROWS && col+1 < COLS) {
         if (grid[row+1][col+1] == 1) count++;
     }
     return count;
