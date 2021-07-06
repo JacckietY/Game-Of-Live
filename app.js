@@ -202,33 +202,30 @@ function applyRules(row, col) {
         nextGrid[row][col] = 1;
     }
 }
-    
+
+//if neighbour exist, return 1, else 0
+function checkNeighbour(row, col){
+    if(row - 1 < 0 
+        || col - 1 < 0
+        || col + 1 > COLS
+        || row + 1 > ROWS) return 0;
+
+    return grid[row][col];
+}
+
+// return count of neighbours
 function countNeighbors(row, col) {
     let count = 0;
-    if (row-1 >= 0) {
-        if (grid[row-1][col] == 1) count++;
-    }
-    if (row-1 >= 0 && col-1 >= 0) {
-        if (grid[row-1][col-1] == 1) count++;
-    }
-    if (row-1 >= 0 && col+1 < COLS) {
-        if (grid[row-1][col+1] == 1) count++;
-    }
-    if (col-1 >= 0) {
-        if (grid[row][col-1] == 1) count++;
-    }
-    if (col+1 < COLS) {
-        if (grid[row][col+1] == 1) count++;
-    }
-    if (row+1 < ROWS) {
-        if (grid[row+1][col] == 1) count++;
-    }
-    if (row+1 < ROWS && col-1 >= 0) {
-        if (grid[row+1][col-1] == 1) count++;
-    }
-    if (row+1 < ROWS && col+1 < COLS) {
-        if (grid[row+1][col+1] == 1) count++;
-    }
+
+    count += checkNeighbour[row - 1][col - 1];
+    count += checkNeighbour[row - 1][col];
+    count += checkNeighbour[row - 1][col + 1];
+    count += checkNeighbour[row][col - 1];
+    count += checkNeighbour[row][col + 1];
+    count += checkNeighbour[row + 1][col - 1];
+    count += checkNeighbour[row + 1][col];
+    count += checkNeighbour[row + 1][col + 1];
+    
     return count;
 }
 
