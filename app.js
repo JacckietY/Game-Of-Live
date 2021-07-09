@@ -106,21 +106,13 @@ function setupControlButtons() {
 function clearButtonHandler() {
     
     isPlaying = false;
-    controls.startButton.innerHTML = "Start";    
+    controls.startButton.textContent = "Start";    
     clearTimeout(timer);
     
-    let cellsList = document.getElementsByClassName("live");
-    // convert to array first, otherwise, you're working on a live node list
-    // and the update doesn't work!
-    let cells = [];
-    for (let i = 0; i < cellsList.length; i++) {
-        cells.push(cellsList[i]);
-    }
-    
-    for (let i = 0; i < cells.length; i++) {
-        cells[i].setAttribute("class", "dead");
-    }
-    resetGrids;
+    [...document.querySelectorAll(".live")]
+        .forEach(el => el.setAttribute("class", "dead"));
+
+    resetGrids();
 }
 
 function randomButtonHandler() {
