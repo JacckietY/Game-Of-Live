@@ -81,15 +81,11 @@ function cellClickHandler() {
 
 }
 
+//update View
 function updateView() {
     for (let i = 0; i < ROWS; i++) {
         for (let j = 0; j < COLS; j++) {
-            let cell = document.getElementById(`_${ i }_${ j }`);
-            if (grid[i][j] == 0) {
-                cell.setAttribute("class", "dead");
-            } else {
-                cell.setAttribute("class", "live");
-            }
+            gridDOM[i][j].setAttribute("class", grid[i][j] ? 'live' : 'dead');
         }
     }
 }
@@ -215,14 +211,14 @@ function checkNeighbour(row, col){
 function countNeighbors(row, col) {
     let count = 0;
 
-    count += checkNeighbour[row - 1][col - 1];
-    count += checkNeighbour[row - 1][col];
-    count += checkNeighbour[row - 1][col + 1];
-    count += checkNeighbour[row][col - 1];
-    count += checkNeighbour[row][col + 1];
-    count += checkNeighbour[row + 1][col - 1];
-    count += checkNeighbour[row + 1][col];
-    count += checkNeighbour[row + 1][col + 1];
+    count += checkNeighbour(row - 1, col - 1);
+    count += checkNeighbour(row - 1, col);
+    count += checkNeighbour(row - 1, col + 1);
+    count += checkNeighbour(row, col - 1);
+    count += checkNeighbour(row, col + 1);
+    count += checkNeighbour(row + 1, col - 1);
+    count += checkNeighbour(row + 1, col);
+    count += checkNeighbour(row + 1, col + 1);
     
     return count;
 }
