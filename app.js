@@ -59,6 +59,8 @@ function createTable() {
             const cell = document.createElement("td");
             gridDOM[i][j] = cell;
             cell.setAttribute("id", `_${ i }_${ j }`);
+            cell.dataset.i = i;
+            cell.dataset.j = j;
             cell.setAttribute("class", "dead");
             cell.addEventListener('click', cellClickHandler);
             tr.appendChild(cell);
@@ -68,19 +70,15 @@ function createTable() {
     gridContainer.appendChild(table);
 }
 
+// handle click cell
 function cellClickHandler() {
-    let rowcol = this.id.split("_");
-    let row = rowcol[0];
-    let col = rowcol[1];
+    const { i, j } = this.dataset;
     
-    let classes = this.getAttribute("class");
-    if(classes.indexOf("live") > -1) {
-        this.setAttribute("class", "dead");
-        grid[row][col] = 0;
-    } else {
-        this.setAttribute("class", "live");
-        grid[row][col] = 1;
-    }       
+    const lifeStatus = (grid[i][j] + 1) % 2;
+    grid[i][j] = lifeStatus;
+
+    this.setAttribute("class", lifeStatus ? 'live' : 'dead');
+
 }
 
 function updateView() {
