@@ -115,17 +115,17 @@ function clearButtonHandler() {
     resetGrids();
 }
 
+//generate random life cells
 function randomButtonHandler() {
     if (isPlaying) return;
+
     clearButtonHandler();
+
     for (let i = 0; i < ROWS; i++) {
         for (let j = 0; j < COLS; j++) {
-            let isLive = Math.round(Math.random());
-            if (isLive == 1) {
-                let cell = document.getElementById(`_${ i }_${ j }`);
-                cell.setAttribute("class", "live");
-                grid[i][j] = 1;
-            }
+            const isLive = Math.round(Math.random());
+            grid[i][j] = isLive;
+            isLive ? gridDOM[i][j].setAttribute("class", "live") : null;
         }
     }
 }
